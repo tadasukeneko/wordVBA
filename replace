@@ -1,0 +1,22 @@
+Sub 置換()
+
+Dim rBook As Object, rRow As Object
+Set rBook = GetObject(ActiveDocument.Path & "\置換.xlsx") '同一フォルダに「置換.xlsx」というエクセルを置く
+
+With ActiveDocument.Content.Find
+    For Each rRow In rBook.Worksheets(1).Range("a1:b100").Rows '範囲は調整する
+        If rRow.Cells(1).Value = "" Then Exit For '空白が現れたらループから抜ける
+        .Text = rRow.Cells(1).Value '1列目の文字列があれば
+        
+        mystring = Replace(rRow.Cells(2).Value, vbLf, vbCr) '改行コードを置換
+
+        .Replacement.Text = mystring '2列目の文字へ置換する
+        
+        .Execute Replace:=wdReplaceAll
+    Next rRow
+End With
+'rBook.Application.Quit
+Set rBook = Nothing
+MsgBox ("終了")
+
+End Sub
